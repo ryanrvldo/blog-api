@@ -1,0 +1,40 @@
+version: '3.5'
+
+services:
+  blog-api:
+    container_name: blog-api
+    image: blog-api:0.0.1
+    ports:
+    - 8080:8080
+    environment:
+      DATABASE_USERNAME: admin
+      DATABASE_PASSWORD: admin
+      DATABASE_URL: jdbc:postgresql://blog-api-postgres:5432/blog-api-db
+
+  blog-postgres:
+    container_name: blog-api-postgres
+    image: postgres:latest
+    ports:
+    - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: admin
+      POSTGRES_USER: admin
+      POSTGRES_DB: blog-api-db
+    volumes:
+    - blog-postgres-data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@ryanrvldo.dev
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_LISTEN_PORT: 80
+    ports:
+      - 9876:80
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    links:
+      - blog-postgres:pgsql-server
+volumes:
+  blog-postgres-data:
+  pgadmin-data:
